@@ -1,0 +1,4 @@
+# Ignorar archivos específicos
+src/main/java/com/example/partidosya/prueba2.java
+src/main/java/com/example/partidosya/prueba3.java
+src/main/java/com/example/partidosya/pruebas.java
