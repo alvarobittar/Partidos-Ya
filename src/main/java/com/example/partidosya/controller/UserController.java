@@ -1,46 +1,42 @@
 package com.example.partidosya.controller;
 
+import com.example.partidosya.database.UserDB;
 import com.example.partidosya.models.User;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/users")
 public class UserController {
 
-    @RequestMapping(value = "USER/{id}")
+    @Autowired
+    private UserDB userDB;
+
+    @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
-        User user = new User();
+        return userDB.getUser(id);
+    }
+
+    @GetMapping
+    public List<User> getUsers() {
+        return userDB.getUsers();
+    }
+
+    @PostMapping
+    public User registerUser(@RequestBody User user) {
+        return userDB.register(user);
+    }
+
+    @PutMapping("/{id}")
+    public User updateUser(@PathVariable Long id, @RequestBody User user) {
         user.setId(id);
-        user.setName("Juan");
-        user.setApellido("Perez");
-        user.setEmail("juanperez@gmail.com");
-        user.setPassword("1234");
-        return user;
-
-
+        return userDB.updateUser(user);
     }
 
-    @RequestMapping(value = "USER876")
-    public User putUser() {
-        User user = new User();
-        user.setName("Juan");
-        user.setApellido("Perez");
-        user.setEmail("juanperez@gmail.com");
-        user.setPassword("1234");
-        return user;
-    }
-
-
-    @RequestMapping(value = "USER234")
-    public User deleteUser() {
-        User user = new User();
-        user.setName("Juan");
-        user.setApellido("Perez");
-        user.setEmail("juanperez@gmail.com");
-        user.setPassword("1234");
-        return user;
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userDB.deleteUser(id);
     }
 }
