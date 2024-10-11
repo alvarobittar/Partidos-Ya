@@ -20,4 +20,18 @@ async function cargarUsers() {
 
   console.log(users);
 
+    let listadoHTML = '';
+    for (let user of users) {
+    }
+
+    let userHTML = <tr> <td>${user.id}</td> <td>${user.nombre}</td> <td>${user.email}</td> <td>${user.password}</td></tr>;
+
+    listadoHTML += userHTML;
+
+    document.querySelector('#users tbody').innerHTML = listadoHTML;
+
+
 }
+
+
+      //<button class="btn btn-danger" onclick="eliminarUser(${user.id})">Eliminar</button>
