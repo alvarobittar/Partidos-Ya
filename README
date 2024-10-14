@@ -1,3 +1,15 @@
 PROYECTO PROGRAMACION 2
-estudiante: Alvaro Bittar
-nombre del proyecto: 
+Estudiante: Alvaro Bittar
+Nombre del proyecto: Storyloom
+
+Descripción:
+Bienvenidos al repositorio de Storyloom-Backend, un proyecto desarrollado en Java utilizando el framework Spring Boot.
+Este proyecto se basa en una Applicacion en la que podremos buscar y marcar peliculas que queremos ver y tmabien aquellas que ya vimos. 
+
+Características principales:
+Register y Login.
+CRUD.
+Llamadas a una API con informacion sobre peliculas.
+Integración con una base de datos relacional para almacenar la información.
+Manejo de autenticación y seguridad utilizando JWT.
+API RESTful para interactuar con el frontend u otros servicios.
