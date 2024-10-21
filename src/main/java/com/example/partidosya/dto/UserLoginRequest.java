@@ -1,11 +1,12 @@
 package com.example.partidosya.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
+@AllArgsConstructor     //no usa getter ni setter
+@NoArgsConstructor
 public class UserLoginRequest {
-    private String email;
+    private String username;
     private String password;
 }

@@ -30,6 +30,12 @@ public class MovieController {
         return ResponseEntity.ok(popularMovies);
     }
 
+    @GetMapping("/top_rated")
+    public ResponseEntity<String> getTopRatedMovies() {
+        String topRatedMovies = movieService.getTopRatedMovies();
+        return ResponseEntity.ok(topRatedMovies);
+    }
+
     @GetMapping("/screen/{id}")
     public ResponseEntity<String> getScreenMovieId(@PathVariable String id) {
         String screenMovieId = movieService.getScreenMovieId(id);
@@ -41,10 +47,6 @@ public class MovieController {
         String searchMovies = movieService.getSearchMovies(query);
         return ResponseEntity.ok(searchMovies);
     }
-
-    //@GetMapping("/list/{userId}")
-    //public ResponseEntity<String> getUserMovieList(@PathVariable String userId) {
-       // String movieList = movieService.getUserMovieList(userId);
-       // return ResponseEntity.ok(movieList);
-    //}
 }
+
+

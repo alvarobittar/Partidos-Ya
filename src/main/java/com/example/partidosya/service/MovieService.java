@@ -9,47 +9,55 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 @Service
 public class MovieService {
 
-    private static final String TRENDING_API_URL = "https://api.themoviedb.org/3/trending/movie/day?language=en-US";
-    private static final String POPULAR_API_URL = "https://api.themoviedb.org/3/movie/popular?language=en-US";
-    private static final String SCREENID_API_URL = "https://api.themoviedb.org/3/movie/{movie_id}?language=es-ES";
-    private static final String SEARCH_API_URL = "https://api.themoviedb.org/3/search/movie?language=es-ES&query={query}";
+    @Value("${api_base_url}")  //URL de la API
+    private String apiBaseUrl;
 
-    @Value("${jwt.secret}") //key para acceder a la API encriptada
-    private String authHeader;
+    @Value("${jwt.secret}") //key para acceder a la API
+    private String apiKey;
 
     public String getTrendingMovies() {
-        return fetchMovies(TRENDING_API_URL);
+        String url = apiBaseUrl + "/trending/movie/day?language=en-US&api_key=" + apiKey;
+        return fetchMovies(url);
     }
 
     public String getPopularMovies() {
-        return fetchMovies(POPULAR_API_URL);
+        String url = apiBaseUrl + "/movie/popular?language=en-US&api_key=" + apiKey;
+        return fetchMovies(url);
+    }
+
+    public String getTopRatedMovies() {
+        String url = apiBaseUrl + "/movie/top_rated?language=en-US&api_key=" + apiKey;
+        return fetchMovies(url);
     }
 
     public String getScreenMovieId(String id) {
-        String url = SCREENID_API_URL.replace("{movie_id}", id);
+        String url = apiBaseUrl + "/movie/" + id + "?language=es-ES&api_key=" + apiKey;
         return fetchMovies(url);
     }
 
     public String getSearchMovies(String query) {
-        String url = SEARCH_API_URL.replace("{query}", query);
+        String url = apiBaseUrl + "/search/movie?language=es-ES&query=" + query + "&api_key=" + apiKey;
         return fetchMovies(url);
     }
 
 
-    //public String getUserMovieList(String userId) {
-       // return "{\"results\": [{\"id\": 1, \"title\": \"Película 1\", \"poster_path\": \"/path1.jpg\", \"seen\": false}, {\"id\": 2, \"title\": \"Película 2\", \"poster_path\": \"/path2.jpg\", \"seen\": true}]}";
-    //}
-
+    public boolean movieExists(int movieId) {
+        String url = apiBaseUrl + "/movie/" + movieId + "?language=es-ES&api_key=" + apiKey;
+        String response = fetchMovies(url);
+        return !response.contains("status_code");
+    }
 
 
     private String fetchMovies(String url) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("accept", "application/json");
-        headers.set("Authorization", authHeader);
+        headers.set("Authorization", apiKey);
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 

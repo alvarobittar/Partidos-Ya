@@ -1,29 +1,58 @@
 package com.example.partidosya.models;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchConnectionDetails;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.List;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "users")                 //Carga las tablas de la base de datos
-public class User {
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})                 //Carga las tablas de la base de datos
+public class User implements UserDetails {
 
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter @Setter
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Getter @Setter
-    @Column(name = "username")
+
     private String username;
 
-    @Getter @Setter
-    @Column(name = "email")
+    @Column(nullable = false)
     private String email;
 
-    @Getter @Setter
-    @Column(name = "password")
+
     private String password;
+
+
+    private Role role;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));        //devuelve una list que contiene un solo elemento. Representa el rol del usuario
+    }
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
 }
