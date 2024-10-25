@@ -10,22 +10,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
 import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 public class MovieService {
 
-    @Value("${api_base_url}")  //URL de la API
+    //URL de la API
+    @Value("${api_base_url}")
     private String apiBaseUrl;
 
-    @Value("${jwt.secret}") //key para acceder a la API
+    //key para acceder a la API
+    @Value("${jwt.secret}")
     private String apiKey;
+
+
 
     public String getTrendingMovies() {
         String url = apiBaseUrl + "/trending/movie/day?language=en-US&api_key=" + apiKey;
         return fetchMovies(url);
     }
+
 
     public String getPopularMovies() {
         String url = apiBaseUrl + "/movie/popular?language=en-US&api_key=" + apiKey;
@@ -39,7 +43,7 @@ public class MovieService {
 
     public String getScreenMovieId(String id) {
         // Llamar a la API para obtener detalles de la película
-        String url = apiBaseUrl + "/movie/" + id + "?language=es-ES&api_key=" + apiKey;
+        String url = apiBaseUrl + "/movie/" + id + "?language=en-US&api_key=" + apiKey;
         String jsonResponse = fetchMovies(url);
 
         // Convertir la respuesta JSON a un objeto para poder manipularlo
@@ -157,4 +161,6 @@ public class MovieService {
             throw new RuntimeException("Error al obtener películas", e);
         }
     }
+
 }
+

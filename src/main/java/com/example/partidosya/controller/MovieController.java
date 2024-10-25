@@ -47,7 +47,10 @@ public class MovieController {
         String searchMovies = movieService.getSearchMovies(query);
         return ResponseEntity.ok(searchMovies);
     }
+
+
 }
+
 
 
 
