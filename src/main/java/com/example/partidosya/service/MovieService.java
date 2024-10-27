@@ -1,5 +1,6 @@
 package com.example.partidosya.service;
 
+import com.example.partidosya.dto.MovieDetails;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -134,16 +135,10 @@ public class MovieService {
 
 
     public String getSearchMovies(String query) {
-        String url = apiBaseUrl + "/search/movie?language=es-ES&query=" + query + "&api_key=" + apiKey;
+        String url = apiBaseUrl + "/search/movie?language=en-US&query=" + query + "&api_key=" + apiKey;
         return fetchMovies(url);
     }
 
-
-    public boolean movieExists(int movieId) {
-        String url = apiBaseUrl + "/movie/" + movieId + "?language=es-ES&api_key=" + apiKey;
-        String response = fetchMovies(url);
-        return !response.contains("status_code");
-    }
 
 
     private String fetchMovies(String url) {
@@ -162,5 +157,21 @@ public class MovieService {
         }
     }
 
+    public MovieDetails getMovieDetails(int movieId) {
+        String url = apiBaseUrl + "/movie/" + movieId + "?language=en-US&api_key=" + apiKey;
+        String response = fetchMovies(url);
+
+        try {
+            JSONObject movieData = new JSONObject(response);
+            MovieDetails movieDetails = new MovieDetails();
+            movieDetails.setTitle(movieData.getString("title"));
+            movieDetails.setPosterPath(movieData.getString("poster_path"));
+            return movieDetails;
+        } catch (Exception e) {
+            throw new RuntimeException("Error al obtener detalles de la película", e);
+        }
+    }
 }
+
+
 

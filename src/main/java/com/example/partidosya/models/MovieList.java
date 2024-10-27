@@ -24,6 +24,9 @@ public class MovieList {
 
     private int movieId;
 
+    private String title;      // Título de la película
+    private String posterPath;  // Ruta del póster de la película
+
     @Enumerated(EnumType.STRING)
     private MovieStatus status;
 

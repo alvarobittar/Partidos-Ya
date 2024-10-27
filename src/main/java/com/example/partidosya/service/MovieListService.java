@@ -1,5 +1,6 @@
 package com.example.partidosya.service;
 
+import com.example.partidosya.dto.MovieDetails;
 import com.example.partidosya.models.MovieList;
 import com.example.partidosya.models.User;
 import com.example.partidosya.repository.MovieListRepository;
@@ -25,9 +26,10 @@ public class MovieListService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Verificar si la película existe en la API de TMDB
-        if (!movieService.movieExists(movieId)) {
-            throw new RuntimeException("The movie with the ID provided does not exist.");
+        // Obtener detalles de la película desde la API
+        MovieDetails movieDetails = movieService.getMovieDetails(movieId);
+        if (movieDetails == null) {
+            throw new RuntimeException("La película con el ID proporcionado no existe.");
         }
 
         // Verificar si la película ya existe en la lista del usuario
@@ -36,15 +38,15 @@ public class MovieListService {
                 .findFirst();
 
         if (existingEntry.isPresent()) {
-            // Actualizar el estado si la película ya está en la lista
             MovieList movieList = existingEntry.get();
             movieList.setStatus(status);
             movieListRepository.save(movieList);
         } else {
-            // Crear una nueva entrada si la película no está en la lista
             MovieList newMovie = MovieList.builder()
                     .user(user)
                     .movieId(movieId)
+                    .title(movieDetails.getTitle())
+                    .posterPath(movieDetails.getPosterPath())
                     .status(status)
                     .build();
             movieListRepository.save(newMovie);
@@ -61,9 +63,17 @@ public class MovieListService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        movieListRepository.findByUser(user).stream()
+        // Eliminar de la lista de watchlist
+        movieListRepository.findByUserAndStatus(user, MovieList.MovieStatus.WATCHLIST)
+                .stream()
                 .filter(m -> m.getMovieId() == movieId)
-                .findFirst()
-                .ifPresent(movieListRepository::delete);
+                .forEach(movieListRepository::delete);
+
+        // Eliminar de la lista de seen
+        movieListRepository.findByUserAndStatus(user, MovieList.MovieStatus.SEEN)
+                .stream()
+                .filter(m -> m.getMovieId() == movieId)
+                .forEach(movieListRepository::delete);
     }
+
 }

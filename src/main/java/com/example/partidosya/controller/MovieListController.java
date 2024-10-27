@@ -2,6 +2,7 @@ package com.example.partidosya.controller;
 
 import com.example.partidosya.models.MovieList;
 import com.example.partidosya.service.MovieListService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,12 +20,14 @@ public class MovieListController {
     @PostMapping("/add")
     public ResponseEntity<String> addMovie(@RequestParam Long userId, @RequestParam int movieId, @RequestParam MovieList.MovieStatus status) {
         try {
+            // Llama al servicio para agregar la película
             movieListService.addMovie(userId, movieId, status);
-            return ResponseEntity.ok("Movie added/updated successfully."); // Película añadida/actualizada correctamente
+            return ResponseEntity.ok("Película añadida/actualizada correctamente");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
 
     @GetMapping("/user/{userId}/watchlist")
     public ResponseEntity<List<MovieList>> getWatchlist(@PathVariable Long userId) {
@@ -37,12 +40,13 @@ public class MovieListController {
     }
 
     @DeleteMapping("/user/{userId}/remove")
-    public ResponseEntity<String> removeMovie(@RequestParam Long userId, @RequestParam int movieId) {
+    public ResponseEntity<String> removeMovie(@PathVariable Long userId, @RequestParam int movieId) {
         try {
             movieListService.removeMovie(userId, movieId);
-            return ResponseEntity.ok("Movie Deleted."); // Película eliminada
+            return ResponseEntity.ok("Película eliminada correctamente.");
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
 }
