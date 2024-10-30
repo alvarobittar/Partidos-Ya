@@ -24,15 +24,15 @@ public class MovieListService {
 
     public void addMovie(Long userId, int movieId, MovieList.MovieStatus status) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Obtener detalles de la película desde la API
+        //Details
         MovieDetails movieDetails = movieService.getMovieDetails(movieId);
         if (movieDetails == null) {
-            throw new RuntimeException("La película con el ID proporcionado no existe.");
+            throw new RuntimeException("the movie has not been found");
         }
 
-        // Verificar si la película ya existe en la lista del usuario
+        //Verification existing movie
         Optional<MovieList> existingEntry = movieListRepository.findByUser(user).stream()
                 .filter(m -> m.getMovieId() == movieId)
                 .findFirst();
@@ -55,21 +55,21 @@ public class MovieListService {
 
     public List<MovieList> getUserMovies(Long userId, MovieList.MovieStatus status) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         return movieListRepository.findByUserAndStatus(user, status);
     }
 
     public void removeMovie(Long userId, int movieId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Eliminar de la lista de watchlist
+
         movieListRepository.findByUserAndStatus(user, MovieList.MovieStatus.WATCHLIST)
                 .stream()
                 .filter(m -> m.getMovieId() == movieId)
                 .forEach(movieListRepository::delete);
 
-        // Eliminar de la lista de seen
+
         movieListRepository.findByUserAndStatus(user, MovieList.MovieStatus.SEEN)
                 .stream()
                 .filter(m -> m.getMovieId() == movieId)

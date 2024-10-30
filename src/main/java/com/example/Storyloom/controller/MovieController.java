@@ -21,7 +21,7 @@ public class MovieController {
     @GetMapping("/trending")
     public ResponseEntity<String> getTrendingMovies() {
         String trendingMovies = movieService.getTrendingMovies();
-        return ResponseEntity.ok(trendingMovies);  // Devolvemos el JSON como respuesta
+        return ResponseEntity.ok(trendingMovies);
     }
 
     @GetMapping("/popular")

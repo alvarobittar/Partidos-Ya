@@ -22,7 +22,7 @@ public class MovieListController {
         try {
             // Llama al servicio para agregar la película
             movieListService.addMovie(userId, movieId, status);
-            return ResponseEntity.ok("Película añadida/actualizada correctamente");
+            return ResponseEntity.ok("Movie added successfully");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -43,7 +43,7 @@ public class MovieListController {
     public ResponseEntity<String> removeMovie(@PathVariable Long userId, @RequestParam int movieId) {
         try {
             movieListService.removeMovie(userId, movieId);
-            return ResponseEntity.ok("Película eliminada correctamente.");
+            return ResponseEntity.ok("Movie removed successfully");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

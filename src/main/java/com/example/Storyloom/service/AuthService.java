@@ -28,12 +28,12 @@ public class AuthService {
         UserDetails user = userRepository.findByUsername(request.getUsername()).orElseThrow();
         String token = jwtService.getToken(user);
 
-        // Suponiendo que UserDetails tiene un método para obtener el ID del usuario
-        Long userId = ((User) user).getId(); // Cambia esto según tu implementación del UserDetails
+
+        Long userId = ((User) user).getId();
 
         return AuthResponse.builder()
                 .token(token)
-                .userId(userId) // Incluye el ID del usuario
+                .userId(userId)
                 .build();
     }
 
